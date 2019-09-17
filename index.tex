@@ -1,5 +1,6 @@
 \documentclass[UTF8]{ctexrep}
 
+\usepackage{graphicx}
 
 \ctexset{
     section/name = {第,节},
@@ -43,17 +44,34 @@
 
 \paragraph{2009年}
 \subparagraph{Social influence analysis in large-scale networks}~\cite{tang2009social}
-    \par 主要研究社交网络\textbf{\textit{(social network)}}的建模、分类及其内部关系，提出了\textbf{Topical Affinity Propagation}用来对社交网络进行建模。最终能够找到一个topic下最具代表性的节点，同时发现节点对周围节点的影响。
-    \par 有很多看不懂的机器学习的公式和算法
+\par 主要研究社交网络\textbf{\textit{(social network)}}的建模、分类及其内部关系，提出了\textbf{Topical Affinity Propagation}用来对社交网络进行建模。最终能够找到一个topic下最具代表性的节点，同时发现节点对周围节点的影响。
+\par 有很多看不懂的机器学习的公式和算法
 
 \subparagraph{Topic distributions over links on web}~\cite{tang2009topic}
+\par 主要研究如何对网页上的链接进行分类和如何量化链接的影响力
+\par 接下来就看不懂了
 
+\begin{figure}[h]
+    \caption{topical factor graph model}
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/figures/model1.png}
+    \label{fig:model1}
+\end{figure}
 %--------------------------%
 
 \paragraph{2010年}
-\subparagraph{论文2~\cite{wang2010mining}}
+\subparagraph{Mining Advisor-Advisee Relationships from Research
+Publication Networks}\cite{wang2010mining}
+\par 主要研究如何将导师、学生关系从合作关系中提取、挖掘出来，并给出一种学习方法，用来提升提取的效果。
+
+\par 可见这是如今\texttt{aminer}\footnote{https://www.aminer.cn}所做的事情的简化版。
+\par {\heiti 关键词：}\emph{relationship mining, time-constrained probabilistic factor graph model, jointly likelihood objective function, advisor-advisee prediction}
+
+
 \subparagraph{论文3~\cite{yang2010social}}
-\subparagraph{论文\cite{tan2010social}}
+\subparagraph{Social community analysis via a factor graph model}~\cite{tan2010social}
+\par 与\cite{tang2009topic}基本相同
+
 
 %--------------------------%
 
