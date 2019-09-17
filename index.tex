@@ -1,9 +1,16 @@
-\documentclass[UTF8]{ctexart}
+\documentclass[UTF8]{ctexrep}
+
+
+\ctexset{
+    section/name = {第,节},
+    section/number = {\arabic{section}},
+    subsection/number = {\arabic{section}.\arabic{subsection}}
+}
 
 \title{Aminer调研报告}
 \author{王清雨}
 % \usepackage{apacite}
-\bibliographystyle{apalike}
+\bibliographystyle{acm}
 
 \begin{document}
 
@@ -17,25 +24,62 @@
 \paragraph{2006年8月}
 重写上述功能
 \paragraph{2007年7月}
-添加学者研究兴趣、关联搜索（\emph{association search}）、\emph{survey search}?
+添加学者研究兴趣、关联搜索（\textbf{\textit{association search}}）、\textbf{\textit{survey search}}?
 \paragraph{2008年4月}
-查询理解（\emph{Query understanding}）、新的搜索界面、日志分析
+查询理解（\textbf{\textit{Query understanding}}）、新的搜索界面、日志分析
 \paragraph{2008年11月}
-图搜索、主题挖掘（\emph{topic mining}）
+图搜索、主题挖掘（\textbf{\textit{topic mining}}）
 \paragraph{2009年4月}
 信息编辑、开放资源
 \paragraph{2009年12月}
-学术统计数据（\emph{Academic statistics}）、用户反馈、精细化排名
+学术统计数据（\textbf{\textit{Academic statistics}}）、用户反馈、精细化排名
 
 \section{论文发表历史}
 
-\subsection{Social influence analysis}
-Topic-based social influence analysis in large-scale networks
+\subsection{社交网络分析}
+\textbf{\textit{Topic-based} social influence analysis in large-scale networks}
 
-论文1~\cite{tang2008arnetminer}
-\newline
-2~\cite{tang2008topic}
-\newline
+%--------------------------%
+
+\paragraph{2009年}
+\subparagraph{Social influence analysis in large-scale networks}~\cite{tang2009social}
+    \par 主要研究社交网络\textbf{\textit{(social network)}}的建模、分类及其内部关系，提出了\textbf{Topical Affinity Propagation}用来对社交网络进行建模。最终能够找到一个topic下最具代表性的节点，同时发现节点对周围节点的影响。
+    \par 有很多看不懂的机器学习的公式和算法
+
+\subparagraph{Topic distributions over links on web}~\cite{tang2009topic}
+
+%--------------------------%
+
+\paragraph{2010年}
+\subparagraph{论文2~\cite{wang2010mining}}
+\subparagraph{论文3~\cite{yang2010social}}
+\subparagraph{论文\cite{tan2010social}}
+
+%--------------------------%
+
+\subsection{社交网络排名}
+\textbf{Topic-based heterogeneous ranking}
+
+\paragraph{2008年}
+\subparagraph{论文\cite{tang2008topic}}
+\subparagraph{论文\cite{tang2008arnetminer}}
+
+%--------------------------%
+
+\subsection{知识获取}
+\textbf{Acquiring knowledge from social Web}
+
+\paragraph{2006年}
+\subparagraph{论文\cite{tang2006tree}}
+
+\paragraph{2007年}
+\subparagraph{论文\cite{tang2007social}}
+\subparagraph{论文 \cite{zhang2007constraint}}
+
+\paragraph{2010年}
+\subparagraph{论文\cite{tang2010combination}}
+
+
 3~\cite{tang2011unified}
 \newline
 4~\cite{wang2011adana}
