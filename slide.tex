@@ -1,0 +1,65 @@
+%!TEX program = xelatex
+
+\documentclass[UTF8]{ctexbeamer}
+
+\usepackage{bookmark}
+\usepackage{minted}
+\usepackage{fontspec}
+%--------------------------%
+
+\setmonofont{Consolas}
+
+%--------------------------%
+
+\title{Aminer调研报告}
+% \subtitle{测试——Testing}
+\author{王清雨}
+% \institute{
+%     \inst{1}
+%     \zihao{6}{联创团队 Web组}
+% }
+
+\subject{Computer Science}
+\bibliographystyle{acm}
+
+%--------------------------%
+\usetheme{Darmstadt}
+\usecolortheme{wolverine}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+%--------------------------%
+
+\AtBeginSubsection[]
+{
+    \begin{frame}
+        \frametitle{目录}
+        \tableofcontents[currentsection,currentsubsection]
+    \end{frame}
+}
+
+%--------------------------%
+
+\section[Section]{组织架构}
+\frame{\sectionpage}
+
+
+%--------------------------%
+
+\section[Section]{特点}
+\frame{\sectionpage}
+
+
+
+%--------------------------%
+
+\section[Section]{后台技术}
+\frame{\sectionpage}
+
+%--------------------------%
+
+
+\bibliography{papers}
+\end{document}
