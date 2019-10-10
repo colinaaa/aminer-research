@@ -68,9 +68,11 @@ Publication Networks}\cite{wang2010mining}
 \par {\heiti 关键词：}\emph{relationship mining, time-constrained probabilistic factor graph model, jointly likelihood objective function, advisor-advisee prediction}
 
 
-\subparagraph{论文3~\cite{yang2010social}}
-\subparagraph{Social community analysis via a factor graph model}~\cite{tan2010social}
+\subparagraph{Social community analysis via a factor graph model}~\cite{yang2010social}
 \par 与\cite{tang2009topic}基本相同
+
+\subparagraph{Social community analysis via a factor graph model}~\cite{tan2010social}
+\par 与\cite{tang2009topic,yang2010social}基本相同
 
 
 %--------------------------%
@@ -79,8 +81,23 @@ Publication Networks}\cite{wang2010mining}
 \textbf{Topic-based heterogeneous ranking}
 
 \paragraph{2008年}
-\subparagraph{论文\cite{tang2008topic}}
-\subparagraph{论文\cite{tang2008arnetminer}}
+\subparagraph{A Topic Modeling Approach and its Integration into the Random Walk
+Framework for Academic Search}~\cite{tang2008topic}
+\par 建立了一种新的建模方式\textit{Author-Conference-Topic(ACT) model}，能够同时对论文、作者、出版物进行建模，还采用\textit{Random walk framework}来加强排名\textit{ranking}
+
+\subparagraph{ArnetMiner: Extraction and Mining
+of Academic Social Networks}\cite{tang2008arnetminer}
+\par 应该是\texttt{aminer}\footnote{https://www.aminer.cn}系统第一次在唐杰老师的论文中正式发布\textit{（之前都是作为一个测试系统有提到）}，开篇就提到了\texttt{aminer}的目的及其解决
+\begin{itemize}
+    \item 自动从互联网获取学者信息\quad \texttt{=>} \quad \textit{uniyied tagging approach}
+    \item 将获取到的信息整合入现有数据库的网络中（不同来源的信息如何统一）
+    \item 对整个学术网络进行建模\quad \texttt{=>} \quad \textit{ACT model}
+    \item 为学术网络提供搜索服务
+\end{itemize}
+\par 同时，文章里也提到他们使用一个概率框架\textbf{\textit{a probabilistic
+framework}}来解决重名问题\textit{(name ambiguity problem)}，还提到了\cite{tang2008topic}中所提出的同时对文章的多种信息进行建模的方法。
+\par 有关架构方面的内容见下文第二部分。
+\par 有关相关技术的内容间下文第四部分。
 
 %--------------------------%
 
@@ -88,27 +105,100 @@ Publication Networks}\cite{wang2010mining}
 \textbf{Acquiring knowledge from social Web}
 
 \paragraph{2006年}
-\subparagraph{论文\cite{tang2006tree}}
+\subparagraph{Tree-Structured Conditional Random Fields for
+Semantic Annotation}~\cite{tang2006tree}
+
 
 \paragraph{2007年}
-\subparagraph{论文\cite{tang2007social}}
-\subparagraph{论文 \cite{zhang2007constraint}}
+\subparagraph{Social network extraction of academic researchers}~\cite{tang2007social}
+
 
 \paragraph{2010年}
-\subparagraph{论文\cite{tang2010combination}}
+\subparagraph{A combination approach to web user profiling}~\cite{tang2010combination}
 
 
-3~\cite{tang2011unified}
-\newline
-4~\cite{wang2011adana}
-\newline
-5~\cite{zhang2018name}
+\subsection{重名问题}
+\textbf{name disambiguation}
+
+\paragraph{2007年}
+\subparagraph{A constraint-based probabilistic framework for name disambiguation}~\cite{zhang2007constraint}
+
+
+\paragraph{2010年}
+\subparagraph{A unified probabilistic framework for name disambiguation in digital library}~\cite{tang2011unified}
+
+
+\paragraph{2011年}
+\subparagraph{Adana: Active name disambiguation}~\cite{wang2011adana}
+
+
+\paragraph{2018年}
+\subparagraph{Name Disambiguation in AMiner: Clustering, Maintenance, and Human in the Loop.}~\cite{zhang2018name}
 
 
 \part{组织结构}
 
+从\cite{tang2008arnetminer}中可以看到如下图所示的架构，主要有以下几部分组成：
+\begin{itemize}
+    \item {\heiti 获取信息}\textit{Extraction}
+    \item {\heiti 整合}\textit{Integration}
+    \item {\heiti 存储与访问}\textit{Storage and Access}
+    \item {\heiti 建模}\textit{Modeling}
+    \item {\heiti 搜索}\textit{Search Services}
+\end{itemize}
+\begin{figure}[h]
+    \caption{topical factor graph model}
+    \centering
+    \includegraphics[width=0.6\textwidth]{assets/figures/arch.PNG}
+    \label{fig:arch}
+\end{figure}
+
+\section{aminer遇到的挑战}
+
+\paragraph{获取信息} 鉴于原来对数据的爬取都是基于特定的数据集，是否存在一种通用的爬虫，能够适用于所有的网页（个人认为不太行）
+
+\paragraph{整合} 如何充分利用我们已有的信息来解决重名问题\textbf{\textit{(disambiguation)}}
+
+\paragraph{建模} 之前没有一种同时对各种信息进行建模的方式，并且不同的建模方式之间有着较大的区别，应当研究那种建模方式最适合学术搜索\textbf{\textit{(academic search)}}
+
+\par 其余的部分aminer采用了传统的方式。
+
+
+
+
 \part{特点}
+
 \part{后台技术}
+后台技术主要根据组织结构从四个方面来说：数据获取、重名问题、建模以及搜索。
+
+\section{数据获取}
+相关论文：\cite{tang2008arnetminer}
+数据获取分为两个部分，\textbf{处理}和\textbf{CRF model}
+
+\paragraph{处理}\textit{Process}
+\par 处理分为三步：
+\begin{itemize}
+    \item 有关页面识别
+    \item 处理
+    \item 提取
+\end{itemize}
+\subparagraph{有关页面识别}先通过搜索引擎获取到一系列网页，然后通过二分类分类器\textit{binary classifier}识别其中的学者主页。分类器采用支持向量机\textit{Support Vector Machines}作为分类模型。
+\subparagraph{处理}先将文字划分为\textit{token}，再给它们打上标签，每个标签对应一种学者的一个\textit{property}
+\subparagraph{提取}从打好标签的数据中提取出需要的信息
+
+
+\section{重名问题\textit{Name Disambiguation}}
+相关论文：\cite{tang2008arnetminer}
+
+没太看懂
+
+\section{建模}
+相关论文：\cite{tang2008arnetminer,tang2008topic}
+
+没太看懂
+
+\section{搜索}
+相关论文：\cite{tang2008arnetminer,zhang2007constraint,tang2011unified,wang2011adana,zhang2018name}
 
 \bibliography{papers}
 \end{document}

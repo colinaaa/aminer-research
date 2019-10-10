@@ -1,4 +1,11 @@
 \documentclass[UTF8]{ctexrep}
+
+\usepackage{fontspec}
+\usepackage{graphicx}
+
+%--------------------------%
+
+% \setmonofont{Consolas}
 \ctexset{
     section/name = {第,节},
     section/number = {\arabic{section}},
@@ -14,14 +21,201 @@
 \maketitle
 \newpage
 
-    
+
 %--------------------------%
+\begin{figure}[h]
+    \caption{整体架构}
+    \centering
+    \includegraphics[width=0.75\textwidth]{assets/figures/arch2.png}
+    \label{fig:arch}
+\end{figure}
 
 \part{数据获取}
+
+\subsection{使用scrapy方案}
+
+\paragraph{scrapy特点}
+\begin{itemize}
+    \item scrapy 是一个使用python，未来爬取网站数据，提取数据而编写的应用框架，具有模块化特点。因此只需要几个模块就可以实现爬虫。
+\end{itemize}
+\par
+
+\paragraph{scrapy模块(主要)}
+
+\begin{itemize}
+    \item scrapy engine 负责Spider、ItemPipeline、Downloader、Scheduler中间的通讯，信号、数据传递等。
+
+    \item Scheduler: 它负责接受引擎发送过来的Request请求，并按照一定的方式进行整理排列，入队，当引擎需要时，交还给引擎。
+    
+    \item Downloader：负责下载Scrapy Engine(引擎)发送的所有Requests请求，并将其获取到的Responses交还给Scrapy Engine(引擎)，由引擎交给Spider来处理。
+    
+    \item Spider：它负责处理所有Responses,从中分析提取数据，获取Item字段需要的数据，并将需要跟进的URL提交给引擎，再次进入Scheduler(调度器)。
+    
+    \item Item Pipeline：它负责处理Spider中获取到的Item，并进行进行后期处理（详细分析、过滤、存储等）的地方。
+\end{itemize}
+\par
+
+\paragraph{意义}
+\begin{itemize}
+    \item 开发迅速：一般情况下，只需要对其中的spider, pipeline进行编写。
+
+    \item 适应多网站爬取：爬取数据主要由spider进行，如果需要对多个网站进行爬取，可以在同一个项目中快速新建爬虫而不需要修改Pipeline。因而未必需要通用爬虫。
+    
+    \item 弹性高：易于进行二次调整。
+\end{itemize}
+\par
+
+\subsection{item}
+\begin{itemize}
+    
+
+    \item 此处由杨澍生学长和王清雨大佬达成了对接，目前没有改变。
+
+    \item 由于要使用二进制传输，所以不需要对item进行编写，只要将data从spider传到pipeline并进行打包item。
+    
+    \item 对这个item内容的修改，需要在pipline和sipder进行微调，不需要对item.py进行修改。
+    
+    \item 基于数据库需求的详细要求也由学长完成。
+\end{itemize}
+
+\paragraph{paper}
+\textit{protobuf repeated类型相当于std的vector，可以用来存放N个相同类型的内容。}
+\begin{verbatim}
+    string title = 1;
+    string journal = 2;
+    string journal_name = 3;
+    repeated string author = 4;
+    string date = 5;
+    string pagination = 6;
+    string issueNumber = 7;
+    string volumeNumber = 8;
+    string genre = 9;
+\end{verbatim}
+\par
+
+\paragraph{person}
+\begin{verbatim}
+    string name = 1;
+    repeated Paper paper = 2;
+\end{verbatim}
+\par
+
+\paragraph{spider}
+杨澍生学长之前已经完成了对dblp的爬虫编写，提供了很好的范本，但是没有实现多网站的爬取。
+王清雨大佬提供的后台方案中，只需要对爬取的数据打包成Item直接存储即可。
+\par
+
+\paragraph{未来需要完成的方案}
+\begin{itemize}
+    \item 根据需求，完成多个网站的spider爬虫编写。
+
+    \item 找出paper页面的一般规律，并确保能爬取一个网站的全部内容或者从单一不重复的列表中获取内容。\textit{若能够比较成功地查找url的规律，就可以构造start\_urls来确保内容不被重复爬取。对于能够获得单一不重复列表（例如DBLP）的网站可以采用此方案。}
+    
+    \item 对于不能找出一般规律的，可以使用半通用爬虫，使用正则表达式或者通过item进行判断是否符合需求（比如item中发表期刊是否为计算机类型），递归爬取网站全部页面并提取所需要的内容。\textit{此处要对需要爬取的网站进行调研。}\textit{此处使用正则表达式爬取的内容可能会出现数据错误率的问题，因而半通用爬虫可能需要清洗。}
+    
+    \item 定期进行重新爬取网站全部内容，并与数据库进行更新。\textit{此处考虑可以使用增量爬虫，但是增量爬虫需要两个数据库配合，并且增量爬虫具有内存爆炸的问题，目前只做实验考虑。}
+    
+    \item （可能需要）构建ip池，对一些可能封杀Ip的网站使用。
+\end{itemize}
+\par
+
+\subsection{pipline}
+
+\textit{数据库使用protobuf, 因此，只要将爬取的数据加工后直接写入即可。此前, 杨澍生学长的爬虫已经完成了对数据地加工。}
+
+\paragraph{未来需要完成的部分}
+\begin{itemize}
+\item 利用新的接口，将爬虫数据自动写入数据库。
+\end{itemize}
+
+\subsection{总结和展望}
+\begin{itemize}
+    \item  下一步是完成对多个网站数据的爬取。
+
+    \item  在学长的基础上，这个目标能够比较快的实现。
+    
+    \item  需要加强对爬虫相关知识(包括爬虫)的学习，此外，有一些新的内容需要实现需要努力。
+\end{itemize}
+
 
 %--------------------------%
 
 \part{数据存储}
+
+\section{与爬虫对接}
+
+\paragraph{需求分析}
+
+需要约定接口，对获取到的数据类型及内容进行约束。
+
+\paragraph{Protocal Buffer}
+
+是著名科技公司\textmd{Google}提出的与语言无关，与平台无关，可扩展的用于序列化结构化数据的机制，类似\texttt{XML}和\texttt{JSON}但更简单也更快速。
+
+\par
+通过定义\texttt{.proto}的接口文件，规定好需要存储的数据的类型、结构、大小等，更方便进行存储。
+
+\paragraph{RPC}
+
+同样通过\texttt{Protobuf}定义\texttt{RPC Service}需要的参数与格式，供爬虫方调用。
+
+\paragraph{可能存在的问题}
+
+\begin{itemize}
+    \item 爬虫获取到不在定义中的数据
+    \item 新的数据与已有数据重复或冲突
+    \item 存储失败后如何重新存储
+\end{itemize}
+
+\section{数据库的选择}
+
+\paragraph{需求分析}
+
+存储需要做到：
+\begin{itemize}
+    \item 体现数据之间的关联
+    \item 可扩展性高
+    \item 可存储的数据量大
+    \item 根据数据间的联系快速搜索
+\end{itemize}
+
+因此我们选用了图数据库\texttt{Dgraph}\footnote{https://dgraph.io}作为存储数据库。
+
+\paragraph{特点}
+
+\texttt{Dgraph}具有以下特点：
+
+\begin{itemize}
+    \item 分布式——可以部署在多台服务器上，减轻服务器压力
+    \item 快速——能快速对查询进行相应
+    \item 高可用性——自动进行同步复制，重启失败的实例
+    \item 事务支持——保证数据的一致性
+    \item 灵活——随时可调整数据的模式
+\end{itemize}
+
+\paragraph{存在的问题}
+
+首先，查询语句不够成熟。
+\par
+采用了一套自定义的查询语句，不易维护，且语法较为晦涩
+\par
+其次，该项目比较年轻，不稳定。
+
+\paragraph{主库与从库}
+
+由于需要对获取来的数据进行整合、聚类、分析等准备工作，因此设置\emph{主库与从库}，主库中为已经经过处理过的数据，主要用来给用户展示等。而爬虫获取到的数据则直接写入从库，经过处理后再统一与主库进行合并。
+
+\par
+
+采用主库与从库分离的方式，一方面方便对数据的分析与整理；另一方面由主库主要负责读操作、从库主要负责写操作，减轻同时读写对数据库带来的压力。
+
+\paragraph{可能存在的问题}
+
+\begin{itemize}
+    \item 如何正确地合并两个库
+    \item 如何保证数据一致性、不丢失
+    \item 如何从从库中获取数据并异步处理
+\end{itemize}
 
 %--------------------------%
 
